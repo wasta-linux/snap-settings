@@ -2,5 +2,6 @@ bin                usr
 data/applications  usr/share
 #locale             usr/share
 data/actions       usr/share/polkit-1
-#po                 usr/share/snap-settings
+snapsettings        usr/share/snap-settings
 data/ui            usr/share/snap-settings
+#po                 usr/share/snap-settings
