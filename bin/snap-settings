@@ -27,7 +27,6 @@ else:
     runmode = 'installed'
 
 sys.path.append(modules_dir)
-print(modules_dir)
 from snapsettings import app
 
 if __name__ == '__main__':
