@@ -14,6 +14,7 @@ if os.geteuid() != 0:
 
 # Get runmode and set sys.path.
 bin_path = Path(__file__)
+app_name = bin_path.stem
 bin_dir = bin_path.parents[0]
 bin_parent_dir = bin_path.parents[1]
 
@@ -22,10 +23,11 @@ if bin_parent_dir.stem != 'usr':
     modules_dir = str(bin_parent_dir)
     runmode = 'uninstalled'
 else:
-    modules_dir = '/usr/share/wasta-snap-manager'
+    modules_dir = '/usr/share/' + app_name
     runmode = 'installed'
 
 sys.path.append(modules_dir)
+print(modules_dir)
 from snapsettings import app
 
 if __name__ == '__main__':
