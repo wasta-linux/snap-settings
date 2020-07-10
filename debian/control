@@ -7,7 +7,7 @@ Standards-Version: 3.9.7
 Homepage: https://github.com/wasta-linux/wasta-offline
 
 Package: snap-settings
-Architecture: amd64
+Architecture: all
 Depends: network-manager, snapd, python3, policykit-1, ${misc:Depends}
 Suggests:
 Description: Manage snap settings for better offline support.
