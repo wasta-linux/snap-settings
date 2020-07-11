@@ -1,7 +1,7 @@
 
 [Desktop Entry]
 Name=Snap Settings
-Comment=Manage snap system settings
+Comment=Manage snap system settings for better control over updates.
 Exec=pkexec /usr/bin/snap-settings
 Type=Application
 Icon=preferences-system

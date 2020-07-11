@@ -5,7 +5,7 @@
 <policyconfig>
 
   <action id="org.wasta.apps.snap-settings">
-    <description>Manage snap system settings.</description>
+    <description>Manage snap system settings for better control over updates.</description>
     <message>Authentication is required to run Snap Settings</message>
     <vendor>Wasta-Linux</vendor>
     <vendor_url>sites.google.com/site/wastalinux/</vendor_url>
