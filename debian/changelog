@@ -1,3 +1,9 @@
+snap-settings (0.2) focal; urgency=medium
+
+  * Fixed copy/paste error preventing launch from wasta-snap-manager.
+
+ -- Nate Marti <nate_marti@sil.org>  Tue, 14 Jul 2020 20:53:50 +0100
+
 snap-settings (0.1) focal; urgency=medium
 
   * Initial release.
