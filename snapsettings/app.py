@@ -17,7 +17,7 @@ from pathlib import Path
 class SettingsApp(Gtk.Application):
     def __init__(self):
         super().__init__(
-            application_id='org.wasta.apps.wasta-snap-manager',
+            application_id='org.wasta.apps.snap-settings',
         )
 
         # Add glade GUI file.
