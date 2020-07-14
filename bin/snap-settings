@@ -2,6 +2,7 @@
 
 """ Gtk window to manage Snapd settings """
 import os
+import shutil
 import sys
 
 from pathlib import Path
@@ -31,4 +32,5 @@ from snapsettings import app
 
 if __name__ == '__main__':
     status = app.app.run(sys.argv)
+    shutil.rmtree(Path(modules_dir, 'snapsettings', '__pycache__'))
     sys.exit(status)
