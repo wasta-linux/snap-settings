@@ -1,3 +1,9 @@
+snap-settings (0.2.1) focal; urgency=medium
+
+  * Handle warning messages from $ snap get
+
+ -- Nate Marti <nate_marti@sil.org>  Wed, 12 Aug 2020 14:37:08 +0100
+
 snap-settings (0.2) focal; urgency=medium
 
   * Fixed copy/paste error preventing launch from wasta-snap-manager.

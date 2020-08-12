@@ -99,6 +99,12 @@ class SettingsApp(Gtk.Application):
             self.metered_status = subproc.stdout.split(':')[1].strip()
         return self.inet_connection, self.metered_status
 
+    def sanitize_json(self, input):
+        # Need to strip anything outside of { ... }.
+        #   Extra text (e.g. "WARNING...") can be returned by $ snap get ...
+        output = str(re.search('^\{\n(.*\n)*\}$', input, re.MULTILINE).group(0))
+        return output
+
     def get_system_settings(self):
         """ Returns system settings requiring elevated privileges. """
         # Get refresh.retain setting.
@@ -109,7 +115,7 @@ class SettingsApp(Gtk.Application):
                 universal_newlines=True,
                 check=True
             )
-            data = json.loads(subproc.stdout)
+            data = json.loads(self.sanitize_json(subproc.stdout))
             self.revisions_kept = data['refresh.retain']
         except subprocess.CalledProcessError as e:
             # Is this a pkexec error or a snap error?
@@ -125,7 +131,7 @@ class SettingsApp(Gtk.Application):
                 universal_newlines=True,
                 check=True
             )
-            data = json.loads(subproc.stdout)
+            data = json.loads(self.sanitize_json(subproc.stdout))
             self.metered_handling = data['refresh.metered']
         except subprocess.CalledProcessError as e:
             # Error in snap command; most likely due to unset refresh.metered.
