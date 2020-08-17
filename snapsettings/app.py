@@ -64,43 +64,36 @@ class SettingsApp(Gtk.Application):
 
     def get_metered_status(self):
         """
-        Returns the connection name and nmcli's metered status.
+        Returns the connection name and NetworkManager's metered status.
         If there is no internet connection, then "disconnected" is returned.
-        statuses: unknown, yes, no, yes (guessed), no (guessed)
+        statuses: 0 unknown, 1 yes, 2 no, 3 yes (guessed), 4 no (guessed)
         """
         # TODO: Verify this with other connections:
         #   + offline
         #   + wired
         #   - ppp
         #   - bluetooth?
+
         # Get device from the default route.
-        gws = netifaces.gateways()
-        try:
-            gw4_device = gws['default'][netifaces.AF_INET][1]
-        except KeyError:
-            self.inet_connection = "(offline)"
-            self.metered_status = "disconnected"
-            # TODO: Need to disable checkbox_metered when disconnected.
-            self.builder.get_object('box_connection').hide()
-            return self.inet_connection, self.metered_status
-        subproc = subprocess.run(
-            ['nmcli', '-t', '-f', 'GENERAL.CONNECTION', '--mode', 'tabular', 'dev', 'show', gw4_device],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            universal_newlines=True
-        )
+        #gws = netifaces.gateways()
+
+        # Create NM client object.
+        client = NM.Client.new(None)
+        # Get device.
+        #device = client.get_device_by_iface(gw4_device)
+        primary_connection = client.get_primary_connection()
         # Get connection name.
-        self.inet_connection = subproc.stdout.rstrip()
+        #self.inet_connection = subproc.stdout.rstrip()
+        if not primary_connection:
+            self.inet_connection = '--'
+            self.metered_status = 0
+            return self.inet_connection, self.metered_status
+        self.inet_connection = primary_connection.get_id()
+
         # Get metered status.
-        if self.inet_connection:
-            subproc = subprocess.run(
-                ['nmcli', '-f', 'connection.metered', 'connection', 'show', self.inet_connection],
-                env={'LANG': 'C'},
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                universal_newlines=True
-            )
-            self.metered_status = subproc.stdout.split(':')[1].strip()
+        # https://developer.gnome.org/NetworkManager/unstable/nm-dbus-types.html#NMMetered
+        self.metered_status = client.props.metered
+
         return self.inet_connection, self.metered_status
 
     def get_system_refresh_settings(self):
@@ -158,12 +151,11 @@ class SettingsApp(Gtk.Application):
         elif func == 'set_label':
             item.set_label(value)
         elif func == 'set_active':
-            if value == 'unknown' or value == 'no' or value == 'no (guessed)' or value == 'disconnected':
+            if value == 0 or value == 2 or value == 4: # 'unknown', 'no', 'no (guessed)'
                 state = False
-            elif value == 'yes' or value == 'yes (guessed)':
+            elif value == 1 or value == 3: # 'yes' or 'yes (guessed)'
                 state = True
             item.set_active(state)
-
         else:
             print("error: unkown function")
             exit(1)
@@ -222,7 +214,11 @@ class Handler():
 
     def on_checkbox_metered_toggled(self, *args):
         state = args[0].get_active()
-        app.set_metered_status(self.connection, state)
+        if app.connection == '--':
+            item = app.builder.get_object('checkbox_metered')
+            item.set_active(False)
+            return
+        app.set_metered_status(app.connection, state)
 
     def on_timer_apply_clicked(self, *args):
         input_obj = app.builder.get_object('timer_entry')
