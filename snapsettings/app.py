@@ -3,10 +3,6 @@
 """ Gtk window to manage Snapd settings """
 
 import gi
-import json
-import netifaces
-import os
-import re
 import subprocess
 
 gi.require_version("Gtk", "3.0")
@@ -74,16 +70,14 @@ class SettingsApp(Gtk.Application):
         #   - ppp
         #   - bluetooth?
 
-        # Get device from the default route.
+        # Get the default route.
         #gws = netifaces.gateways()
-
-        # Create NM client object.
-        client = NM.Client.new(None)
         # Get device.
         #device = client.get_device_by_iface(gw4_device)
+
+        # Get connection name from NM client object.
+        client = NM.Client.new(None)
         primary_connection = client.get_primary_connection()
-        # Get connection name.
-        #self.inet_connection = subproc.stdout.rstrip()
         if not primary_connection:
             self.inet_connection = '--'
             self.metered_status = 0
@@ -147,7 +141,7 @@ class SettingsApp(Gtk.Application):
         elif func == 'set_text':
             item.set_text(value)
         elif func == 'set_value':
-            item.set_value(value)
+            item.set_value(int(value))
         elif func == 'set_label':
             item.set_label(value)
         elif func == 'set_active':
@@ -168,6 +162,7 @@ class SettingsApp(Gtk.Application):
         status = 'no'
         if state == True:
             status = 'yes'
+        # TODO: Figure out how to use NM API for this.
         subproc = subprocess.run(
             ['nmcli', 'connection', 'modify', connection, 'connection.metered', status],
             env={'LANG': 'C'},
