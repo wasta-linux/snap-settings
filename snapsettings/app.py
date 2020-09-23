@@ -26,8 +26,6 @@ class SettingsApp(Gtk.Application):
         if not dir.is_dir():
             self.app_ui_dir = '../data/ui/'
 
-    def do_startup(self):
-        Gtk.Application.do_startup(self)
         # Instantiate builder.
         self.builder = Gtk.Builder()
         self.builder.add_from_file(self.app_ui_dir + 'snap-settings.glade')
@@ -37,6 +35,18 @@ class SettingsApp(Gtk.Application):
         self.connection, self.metered_status = self.get_metered_status()
         self.refresh_timer, self.last_refresh, self.next_refresh = self.get_refresh_timer_info()
 
+    def do_startup(self):
+        Gtk.Application.do_startup(self)
+        """
+        # Instantiate builder.
+        self.builder = Gtk.Builder()
+        self.builder.add_from_file(self.app_ui_dir + 'snap-settings.glade')
+
+        # Get initial values. (requires pkexec)
+        self.metered_handling, self.revisions_kept = self.get_system_refresh_settings() # pkexec
+        self.connection, self.metered_status = self.get_metered_status()
+        self.refresh_timer, self.last_refresh, self.next_refresh = self.get_refresh_timer_info()
+        """
         # Set initial GUI values for properties of Gtk widgets not set by Glade.
         ids = {
             'switch_metered': ['set_state', self.metered_handling],
@@ -163,6 +173,8 @@ class SettingsApp(Gtk.Application):
         if state == True:
             status = 'yes'
         # TODO: Figure out how to use NM API for this.
+        #   NOTE: NetworkManager seems to override snap-settings from "no" to
+        #       "guess yes" when on an Android hotspot connection.
         subproc = subprocess.run(
             ['nmcli', 'connection', 'modify', connection, 'connection.metered', status],
             env={'LANG': 'C'},
