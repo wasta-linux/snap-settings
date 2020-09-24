@@ -1,3 +1,9 @@
+snap-settings (0.2.4) focal; urgency=medium
+
+  * Fixed bad widget handling.
+
+ -- Nate Marti <nate_marti@sil.org>  Thu, 24 Sep 2020 15:37:11 +0100
+
 snap-settings (0.2.3) focal; urgency=medium
 
   * Make SnapSettings() attributes available to Handler().
