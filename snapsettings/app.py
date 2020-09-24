@@ -117,8 +117,10 @@ class SettingsApp(Gtk.Application):
             self.metered_handling = 'null'
         try:
             self.revisions_kept = int(refresh_settings['retain'])
-        except KeyError:
+        except KeyError as e:
             # refresh.retain not set.
+            print(e)
+            print("refresh.retain not set, defaulting to '2'")
             self.revisions_kept = 2
 
         return self.metered_handling, self.revisions_kept
@@ -238,8 +240,7 @@ class Handler():
         app.set_refresh_timer(input)
 
     def on_revs_kept_value_changed(self, *args):
-        entry = app.builder.get_object('revs_kept')
-        revs = entry.get_text()
+        revs = int(args[0].get_value())
         app.set_revisions_kept(revs)
 
 
