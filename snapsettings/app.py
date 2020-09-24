@@ -230,7 +230,7 @@ class Handler():
         app.set_metered_status(app.connection, state)
 
     def on_timer_apply_clicked(self, *args):
-        input_obj = app.builder.get_object('timer_entry')
+        input_obj = args[0]
         suggested_obj = app.builder.get_object('timer_suggested')
         if input_obj.get_text():
             input = input_obj.get_text()
