@@ -79,7 +79,11 @@ class Snap():
         payload = 'v2/system-info'
         result = self.session.get(self.fake_http + payload).json()['result']
         r = result['refresh']
-        last = make_human_readable(r['last'])
+        try:
+            last = make_human_readable(r['last'])
+        except KeyError:
+            # new installation
+            last = ''
         next = make_human_readable(r['next'])
         time_output = ['timer: ' + r['timer'], 'last: ' + last, 'next: ' + next]
         return time_output

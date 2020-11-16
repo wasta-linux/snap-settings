@@ -130,7 +130,10 @@ class SettingsApp(Gtk.Application):
         snap = snapd.Snap()
         lines = snap.refresh_time()
         self.refresh_timer = lines[0].split()[1]
-        self.last_refresh = lines[1].split()[1]
+        try:
+            self.last_refresh = lines[1].split()[1]
+        except IndexError:
+            self.last_refresh = ''
         self.next_refresh = lines[2].split(':',1)[1]
         return self.refresh_timer, self.last_refresh, self.next_refresh
 
