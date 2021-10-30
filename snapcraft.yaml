@@ -1,0 +1,19 @@
+name: basic-snap-settings
+version: git
+summary: Set basic snap settings in a user-friendly window.
+description: |
+  Set basic snap settings in a user-friendly window.
+base: core20
+confinement: devmode
+
+
+parts:
+  snapsettings:
+    plugin: python
+    python-version: python3
+    source: snapsettings
+    stage-packages:
+
+apps:
+  test-offlineimap:
+    command: bin/basic-snap-settings
