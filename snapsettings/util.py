@@ -16,3 +16,9 @@ def make_human_readable(input):
     pos = time.mktime(datetime.datetime.strptime(t, fmt_in).timetuple())
     human_readable = datetime.datetime.fromtimestamp(pos).strftime(fmt_out)
     return human_readable
+
+def verify_response(response):
+    status = False
+    if response.get('status') == 'OK':
+        status = True
+    return status
