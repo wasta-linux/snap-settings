@@ -11,7 +11,9 @@ parts:
   snapsettings:
     plugin: python
     source: .
-    stage-snaps: [http]
+    stage-snaps:
+      - http
+      - network-manager
 
 apps:
   basic-snap-settings:

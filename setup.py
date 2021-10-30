@@ -18,5 +18,8 @@ setup(
         ('share/icons/hicolor/scalable/apps', glob.glob('data/icons/*.svg')),
         ('share/traffic-cop/ui', glob.glob('data/ui/*.glade')),
         ('share/applications', glob.glob('data/*.desktop')),
+    ],
+    install_requires=[
+        "gi",
     ]
 )
