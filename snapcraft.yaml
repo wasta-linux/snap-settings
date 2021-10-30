@@ -10,10 +10,10 @@ confinement: devmode
 parts:
   snapsettings:
     plugin: python
-    python-version: python3
     source: snapsettings
-    stage-packages:
+    stage-snaps: [http]
 
 apps:
   basic-snap-settings:
     command: bin/basic-snap-settings
+    extensions: [gnome-3-38]
