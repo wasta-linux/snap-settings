@@ -1,7 +1,7 @@
 # https://docs.python.org/3/distutils/setupscript.html
 
 import glob
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='Snap Settings',

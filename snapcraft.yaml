@@ -10,7 +10,7 @@ confinement: devmode
 parts:
   snapsettings:
     plugin: python
-    source: snapsettings
+    source: .
     stage-snaps: [http]
 
 apps:
