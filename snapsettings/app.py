@@ -12,6 +12,7 @@ from gi.repository import NM
 from pathlib import Path
 
 from snapsettings import snapd
+from snapsettings import util
 
 
 class SettingsApp(Gtk.Application):
@@ -30,8 +31,11 @@ class SettingsApp(Gtk.Application):
         self.builder = Gtk.Builder()
         self.builder.add_from_file(self.app_ui_dir + 'snap-settings.glade')
 
+        # Get snapd instance.
+        self.snap = snapd.Snap()
+
         # Get initial values. (requires pkexec)
-        self.metered_handling, self.revisions_kept = self.get_system_refresh_settings() # pkexec
+        self.metered_handling, self.revisions_kept = self.get_refresh_config() # pkexec
         self.connection, self.metered_status = self.get_metered_status()
         self.refresh_timer, self.last_refresh, self.next_refresh = self.get_refresh_timer_info()
 
@@ -43,7 +47,7 @@ class SettingsApp(Gtk.Application):
         self.builder.add_from_file(self.app_ui_dir + 'snap-settings.glade')
 
         # Get initial values. (requires pkexec)
-        self.metered_handling, self.revisions_kept = self.get_system_refresh_settings() # pkexec
+        self.metered_handling, self.revisions_kept = self.get_refresh_config() # pkexec
         self.connection, self.metered_status = self.get_metered_status()
         self.refresh_timer, self.last_refresh, self.next_refresh = self.get_refresh_timer_info()
         """
@@ -100,47 +104,32 @@ class SettingsApp(Gtk.Application):
 
         return self.inet_connection, self.metered_status
 
-    def get_system_refresh_settings(self):
+    def get_refresh_config(self):
         """
         Returns system refresh.retain and refresh.metered settings.
         """
-        # Get refresh settings.
-        response = snap.get('system', 'refresh')
+        # Get general refresh config.
+        response = self.snap.get('system', 'refresh')
         if not util.verify_response(response):
             return None, None
         refresh_config = response.get('result')
-
-        #return self.metered_handling, self.revisions_kept
-        # try:
-        #     self.metered_handling = refresh_settings['metered']
-        # except KeyError:
-        #     # refresh.metered not set.
-        #     self.metered_handling = 'null'
+        # Get specific values.
         metered_handling = refresh_config.get('metered', 'null')
-        # try:
-        #     self.revisions_kept = int(refresh_settings['retain'])
-        # except KeyError as e:
-        #     # refresh.retain not set.
-        #     print(e)
-        #     print("refresh.retain not set, defaulting to '2'")
-        #     self.revisions_kept = 2
-        revisions_kept = int(refresh_config.get('retain'), '2')
-        print("refresh.retain defaults to 2 if unset")
+        revisions_kept = int(refresh_config.get('retain', '2'))
+        # print("refresh.retain defaults to 2 if unset")
 
         return metered_handling, revisions_kept
 
     def get_refresh_timer_info(self):
         """ Returns value of snapd's refresh timer. """
-        with snapd.Snap() as snap:
-            lines = snap.get_refresh_time()
-
-        self.refresh_timer = lines[0].split()[1]
-        try:
-            self.last_refresh = lines[1].split()[1]
-        except IndexError:
-            self.last_refresh = ''
-        self.next_refresh = lines[2].split(':',1)[1]
-        return self.refresh_timer, self.last_refresh, self.next_refresh
+        result = self.snap.get('system-info', 'refresh.timer').get('result')
+        refresh_timer = result.get('refresh').get('timer')
+        last = self.last_refresh = result.get('refresh').get('last')
+        if not last:
+            last = ''
+        last_refresh = last
+        next_refresh = result.get('refresh').get('next')
+        return refresh_timer, last_refresh, next_refresh
 
     def set_entity_value(self, **kwargs):
         """ Sets initial values of certain Gtk widget properties. """
@@ -197,8 +186,7 @@ class SettingsApp(Gtk.Application):
         states: 'null' or 'hold'
         (requires elevated privileges)
         """
-        snap = snapd.Snap()
-        snap.set_refresh_metered(state)
+        self.snap.set_refresh_metered(state)
 
     def set_refresh_timer(self, value):
         """
@@ -206,8 +194,7 @@ class SettingsApp(Gtk.Application):
         wasta value:    sun5,02:00
         (requires elevated privileges)
         """
-        snap = snapd.Snap()
-        snap.set_refresh_timer(value)
+        self.snap.set_refresh_timer(value)
 
     def set_revisions_kept(self, revs):
         """
@@ -215,8 +202,7 @@ class SettingsApp(Gtk.Application):
         wasta revs:     2
         (requires elevated privileges)
         """
-        snap = snapd.Snap()
-        snap.set_refresh_retain(revs)
+        self.snap.set_refresh_retain(revs)
 
 class Handler():
     def gtk_widget_destroy(self, *args):
