@@ -19,7 +19,7 @@ setup(
         ('share/traffic-cop/ui', glob.glob('data/ui/*.glade')),
         ('share/applications', glob.glob('data/*.desktop')),
     ],
-    install_requires=[
-        "gi",
-    ]
+    # install_requires=[
+    #     "gi",
+    # ]
 )

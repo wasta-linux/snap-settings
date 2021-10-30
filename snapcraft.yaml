@@ -13,6 +13,9 @@ parts:
     source: .
     build-environment:
       - PYTHONPATH: "invalid"
+    stage-packages:
+      - python3-gi
+      - python3-pip
     stage-snaps:
       - http
       - network-manager
