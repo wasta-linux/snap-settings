@@ -104,10 +104,11 @@ class SettingsApp(Gtk.Application):
         """
         Returns system refresh.retain and refresh.metered settings.
         """
-        with snapd.Snap() as snap:
-            # Get refresh settings.
-            # refresh_settings = snap.get_refresh_settings()
-            refresh_settings = snap.get('system', 'refresh')
+        # Get refresh settings.
+        response = snap.get('system', 'refresh')
+        if not util.verify_response(response):
+            return None, None
+        refresh_config = response.get('result')
 
         #return self.metered_handling, self.revisions_kept
         # try:
@@ -115,7 +116,7 @@ class SettingsApp(Gtk.Application):
         # except KeyError:
         #     # refresh.metered not set.
         #     self.metered_handling = 'null'
-        self.metered_handling = refresh_settings.get('metered', 'null')
+        metered_handling = refresh_config.get('metered', 'null')
         # try:
         #     self.revisions_kept = int(refresh_settings['retain'])
         # except KeyError as e:
@@ -123,10 +124,10 @@ class SettingsApp(Gtk.Application):
         #     print(e)
         #     print("refresh.retain not set, defaulting to '2'")
         #     self.revisions_kept = 2
-        self.revisions_kept = int(refresh_settings.get('retain'), '2')
+        revisions_kept = int(refresh_config.get('retain'), '2')
         print("refresh.retain defaults to 2 if unset")
 
-        return self.metered_handling, self.revisions_kept
+        return metered_handling, revisions_kept
 
     def get_refresh_timer_info(self):
         """ Returns value of snapd's refresh timer. """
