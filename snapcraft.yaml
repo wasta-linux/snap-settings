@@ -11,6 +11,8 @@ parts:
   snapsettings:
     plugin: python
     source: .
+    build-environment:
+      PYTHONPATH: "invalid"
     stage-snaps:
       - http
       - network-manager
