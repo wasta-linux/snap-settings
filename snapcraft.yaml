@@ -27,4 +27,4 @@ parts:
 apps:
   basic-snap-settings:
     command: bin/basic-snap-settings
-    extensions: [gnome-3-38]
+    extensions: [gnome-3-28]
