@@ -103,32 +103,36 @@ class SettingsApp(Gtk.Application):
     def get_system_refresh_settings(self):
         """
         Returns system refresh.retain and refresh.metered settings.
-        (requires elevated privileges)
         """
-        snap = snapd.Snap()
-        # Get refresh settings.
-        refresh_settings = snap.get_refresh_settings()
+        with snapd.Snap() as snap:
+            # Get refresh settings.
+            # refresh_settings = snap.get_refresh_settings()
+            refresh_settings = snap.get('system', 'refresh')
 
         #return self.metered_handling, self.revisions_kept
-        try:
-            self.metered_handling = refresh_settings['metered']
-        except KeyError:
-            # refresh.metered not set.
-            self.metered_handling = 'null'
-        try:
-            self.revisions_kept = int(refresh_settings['retain'])
-        except KeyError as e:
-            # refresh.retain not set.
-            print(e)
-            print("refresh.retain not set, defaulting to '2'")
-            self.revisions_kept = 2
+        # try:
+        #     self.metered_handling = refresh_settings['metered']
+        # except KeyError:
+        #     # refresh.metered not set.
+        #     self.metered_handling = 'null'
+        self.metered_handling = refresh_settings.get('metered', 'null')
+        # try:
+        #     self.revisions_kept = int(refresh_settings['retain'])
+        # except KeyError as e:
+        #     # refresh.retain not set.
+        #     print(e)
+        #     print("refresh.retain not set, defaulting to '2'")
+        #     self.revisions_kept = 2
+        self.revisions_kept = int(refresh_settings.get('retain'), '2')
+        print("refresh.retain defaults to 2 if unset")
 
         return self.metered_handling, self.revisions_kept
 
     def get_refresh_timer_info(self):
         """ Returns value of snapd's refresh timer. """
-        snap = snapd.Snap()
-        lines = snap.refresh_time()
+        with snapd.Snap() as snap:
+            lines = snap.get_refresh_time()
+
         self.refresh_timer = lines[0].split()[1]
         try:
             self.last_refresh = lines[1].split()[1]

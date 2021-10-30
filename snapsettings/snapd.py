@@ -3,11 +3,11 @@
 # Built on example shared by SO user david-k-hess:
 # https://stackoverflow.com/a/59594889
 
-import datetime
 import json
 import requests
 import socket
-import time
+
+from snapsettings import util
 
 from urllib3.connection import HTTPConnection
 from urllib3.connectionpool import HTTPConnectionPool
@@ -39,65 +39,58 @@ class Snap():
         self.fake_http = 'http://snapd/'
         self.session.mount(self.fake_http, SnapdAdapter())
 
-    def list(self):
-        payload = 'v2/snaps'
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.session.close()
+
+    def get(self, node, child=None):
+        """
+        Requires elevated privileges.
+        """
+        payload = None
+        if node == 'snaps' or node == 'find?select=refresh' or node == 'system-info':
+            payload = f"v2/{node}"
+            if node == 'snaps' and child:
+                payload = f"{payload}/{child}"
+        elif node == 'system':
+            payload = f"v2/snaps/{node}/conf"
+        if not payload:
+            return None
+
         result = self.session.get(self.fake_http + payload).json()['result']
+        if child and node != 'snaps':
+            parts = child.split('.')
+            for p in parts:
+                result = result.get(p)
         return result
+
+    def list(self):
+        return self.get('snaps')
 
     def info(self, snap):
-        payload = 'v2/snaps/' + snap
-        result = self.session.get(self.fake_http + payload).json()['result']
-        return result
+        return self.get('snaps', snap)
 
-    def refresh_list(self):
-        payload = 'v2/find?select=refresh'
-        result = self.session.get(self.fake_http + payload).json()['result']
-        if type(result) is dict:
-            print(result['message'])
-            result = []
-        return result
+    def get_refresh_list(self):
+        result = self.get('find?select=refresh')
+        refresh_list = None
+        if isinstance(result, list):
+            refresh_list = result
+        return refresh_list
 
-    def refresh_time(self):
+    def get_refresh_time(self):
         """
         $ snap refresh --time
         """
-        def make_human_readable(input):
-            # input has this form: 2020-08-30T02:00:00+01:00
-            # strip ':' from TZ
-            t = input[:-3] + input[-2:]
-
-            # Define formats.
-            fmt_in = '%Y-%m-%dT%H:%M:%S%z'
-            #fmt_out = '%c' # locale date & time
-            fmt_out = '%a, %d %B %Y, %H:%M %Z'
-
-            # Convert to Posix, then convert to human readable.
-            pos = time.mktime(datetime.datetime.strptime(t, fmt_in).timetuple())
-            human_readable = datetime.datetime.fromtimestamp(pos).strftime(fmt_out)
-            return human_readable
-
-        payload = 'v2/system-info'
-        result = self.session.get(self.fake_http + payload).json()['result']
-        r = result['refresh']
-        try:
-            last = make_human_readable(r['last'])
-        except KeyError:
-            # new installation
-            last = ''
-        next = make_human_readable(r['next'])
-        time_output = ['timer: ' + r['timer'], 'last: ' + last, 'next: ' + next]
+        r = self.get('system-info', 'refresh')
+        last_raw = r.get('last', '')
+        last = ''
+        if last_raw != '':
+            last = util.make_human_readable(last_raw)
+        next = util.make_human_readable(r.get('next'))
+        time_output = [f"timer: {r.get('timer')}", f"last: {last}", f"next: {next}"]
         return time_output
-
-    def get_system_info(self):
-        """ Not used. """
-        payload = 'v2/system-info'
-        result = self.session.get(self.fake_http + payload).json()['result']
-        return result
-
-    def get_refresh_settings(self):
-        payload = 'v2/snaps/system/conf'
-        result = self.session.get(self.fake_http + payload).json()['result']['refresh']
-        return result
 
     def set_refresh_retain(self, value):
         """
