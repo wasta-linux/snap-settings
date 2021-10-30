@@ -12,7 +12,7 @@ parts:
     plugin: python
     source: .
     build-environment:
-      PYTHONPATH: "invalid"
+      - PYTHONPATH: "invalid"
     stage-snaps:
       - http
       - network-manager
