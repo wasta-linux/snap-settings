@@ -15,5 +15,5 @@ parts:
     stage-packages:
 
 apps:
-  test-offlineimap:
+  basic-snap-settings:
     command: bin/basic-snap-settings
