@@ -16,9 +16,9 @@ parts:
     build-packages:
       - python3-pip
     stage-packages:
-      - libreadline8
-      - libhogweed5
-      - libnettle7
+      - libhogweed4
+      - libreadline7
+      - libnettle6
       - python3-gi
     stage-snaps:
       - http
