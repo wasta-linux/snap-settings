@@ -3,7 +3,7 @@ version: git
 summary: Set basic snap settings in a user-friendly window.
 description: |
   Set basic snap settings in a user-friendly window.
-base: core20
+base: core18
 confinement: devmode
 
 
