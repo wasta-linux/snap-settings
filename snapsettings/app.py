@@ -25,11 +25,11 @@ class SettingsApp(Gtk.Application):
 
         # Add glade GUI file.
         # data_dirs = os.environ['XDG_DATA_DIRS'].split(':')
-        self.app_ui_dir = str(Path(__file__).parent / 'ui')
-        # self.app_ui_dir = '/usr/share/snap-settings/ui/'
-        # dir = Path(self.app_ui_dir)
-        # if not dir.is_dir():
-        #     self.app_ui_dir = '../data/ui/'
+        # self.app_ui_dir = str(Path(__file__).parent / 'ui')
+        self.app_ui_dir = '/usr/share/snap-settings/ui'
+        dir = Path(self.app_ui_dir)
+        if not dir.is_dir():
+            self.app_ui_dir = './ui'
 
         # Instantiate builder.
         self.builder = Gtk.Builder()
