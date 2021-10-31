@@ -21,7 +21,7 @@ setup(
     data_files=[
         ('share/polkit-1/actions', glob.glob('data/actions/*')),
         ('share/icons/hicolor/scalable/apps', glob.glob('data/icons/*.svg')),
-        ('share/basic-snap-settings/ui', glob.glob('data/ui/*.glade')),
+        # ('share/basic-snap-settings/ui', glob.glob('data/ui/*.glade')),
         ('share/applications', glob.glob('data/*.desktop')),
     ],
 )
