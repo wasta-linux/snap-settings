@@ -1,5 +1,5 @@
 name: basic-snap-settings
-version: 0.3
+version: '0.3'
 summary: Set basic snap settings in a user-friendly window.
 description: |
   Set basic snap settings in a user-friendly window.
