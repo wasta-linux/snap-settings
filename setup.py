@@ -12,10 +12,8 @@ setup(
     url="https://github.com/wasta-linux/snap-settings",
     packages=['snapsettings'],
     package_data={
-        'snapsettings': [
-            'README.md',
-            'data/ui/*.glade',
-        ],
+        'snapsettings': ['README.md'],
+        'snapsettings.ui': ['*.glade'],
     },
     scripts=['bin/basic-snap-settings'],
     data_files=[
