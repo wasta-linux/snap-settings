@@ -5,6 +5,7 @@ description: |
   Set basic snap settings in a user-friendly window.
 base: core18
 confinement: devmode
+grade: stable
 
 
 parts:
