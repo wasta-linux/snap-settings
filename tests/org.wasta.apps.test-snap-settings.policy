@@ -6,7 +6,7 @@
 
   <action id="org.wasta.apps.test-snap-settings">
     <description>Manage snap system settings.</description>
-    <message>Authentication is required to TEST Snap Settings</message>
+    <message>Authentication is required to TEST Basic Snap Settings</message>
     <vendor>Wasta-Linux</vendor>
     <vendor_url>sites.google.com/site/wastalinux/</vendor_url>
     <defaults>
@@ -14,7 +14,7 @@
       <allow_inactive>no</allow_inactive>
       <allow_active>auth_admin_keep</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/home/nate/dev/snap-settings/bin/snap-settings</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/home/nate/dev/snap-settings/bin/basic-snap-settings</annotate>
     <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
   </action>
 </policyconfig>
