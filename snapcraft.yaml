@@ -19,10 +19,10 @@ parts:
       - libhogweed4
       - libreadline7
       - libnettle6
-      - nmcli
       - python3-gi
     stage-snaps:
       - http
+      - network-manager
 
 apps:
   basic-snap-settings:
