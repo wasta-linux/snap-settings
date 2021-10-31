@@ -3,6 +3,7 @@
 """ Gtk window to manage Snapd settings """
 
 import gi
+import os
 import subprocess
 
 gi.require_version("Gtk", "3.0")
@@ -23,10 +24,17 @@ class SettingsApp(Gtk.Application):
         )
 
         # Add glade GUI file.
-        self.app_ui_dir = '/usr/share/snap-settings/ui/'
-        dir = Path(self.app_ui_dir)
-        if not dir.is_dir():
-            self.app_ui_dir = '../data/ui/'
+        data_dirs = os.environ['XDG_DATA_DIRS'].split(':')
+        self.app_ui_dir = '../data/ui'
+        for d in data_dirs:
+            dd = f'{d}/snap-settings/ui'
+            if Path(dd).is_dir():
+                self.app_ui_dir = str(dd)
+                break
+        # self.app_ui_dir = '/usr/share/snap-settings/ui/'
+        # dir = Path(self.app_ui_dir)
+        # if not dir.is_dir():
+        #     self.app_ui_dir = '../data/ui/'
 
         # Instantiate builder.
         self.builder = Gtk.Builder()
