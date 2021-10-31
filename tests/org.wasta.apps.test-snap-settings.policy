@@ -14,7 +14,7 @@
       <allow_inactive>no</allow_inactive>
       <allow_active>auth_admin_keep</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/home/nate/dev/snap-settings/bin/basic-snap-settings</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/home/nate/g/snap-settings/bin/basic-snap-settings</annotate>
     <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
   </action>
 </policyconfig>
