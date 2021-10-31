@@ -27,6 +27,7 @@ class SettingsApp(Gtk.Application):
         data_dirs = os.environ['XDG_DATA_DIRS'].split(':')
         self.app_ui_dir = '../data/ui'
         for d in data_dirs:
+            print(d)
             dd = f'{d}/snap-settings/ui'
             if Path(dd).is_dir():
                 self.app_ui_dir = str(dd)
@@ -38,7 +39,7 @@ class SettingsApp(Gtk.Application):
 
         # Instantiate builder.
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(self.app_ui_dir + 'snap-settings.glade')
+        self.builder.add_from_file(self.app_ui_dir + '/snap-settings.glade')
 
         # Get snapd instance.
         self.snap = snapd.Snap()
