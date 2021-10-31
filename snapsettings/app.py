@@ -7,10 +7,11 @@ import subprocess
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
-gi.require_version("NM", "1.0")
-from gi.repository import NM
+# gi.require_version("NM", "1.0")
+# from gi.repository import NM
 from pathlib import Path
 
+from snapsettings import net
 from snapsettings import snapd
 from snapsettings import util
 
@@ -36,7 +37,8 @@ class SettingsApp(Gtk.Application):
 
         # Get initial values. (requires pkexec)
         self.metered_handling, self.revisions_kept = self.get_refresh_config() # pkexec
-        self.connection, self.metered_status = self.get_metered_status()
+        # self.connection, self.metered_status = self.get_metered_status()
+        self.connection, self.metered_status = net.get_metered_status()
         self.refresh_timer, self.last_refresh, self.next_refresh = self.get_refresh_timer_info()
 
     def do_startup(self):
@@ -48,7 +50,7 @@ class SettingsApp(Gtk.Application):
 
         # Get initial values. (requires pkexec)
         self.metered_handling, self.revisions_kept = self.get_refresh_config() # pkexec
-        self.connection, self.metered_status = self.get_metered_status()
+        self.connection, self.metered_status = net.get_metered_status()
         self.refresh_timer, self.last_refresh, self.next_refresh = self.get_refresh_timer_info()
         """
         # Set initial GUI values for properties of Gtk widgets not set by Glade.
@@ -72,37 +74,37 @@ class SettingsApp(Gtk.Application):
         self.add_window(window)
         window.show()
 
-    def get_metered_status(self):
-        """
-        Returns the connection name and NetworkManager's metered status.
-        If there is no internet connection, then "disconnected" is returned.
-        statuses: 0 unknown, 1 yes, 2 no, 3 yes (guessed), 4 no (guessed)
-        """
-        # TODO: Verify this with other connections:
-        #   + offline
-        #   + wired
-        #   - ppp
-        #   - bluetooth?
-
-        # Get the default route.
-        #gws = netifaces.gateways()
-        # Get device.
-        #device = client.get_device_by_iface(gw4_device)
-
-        # Get connection name from NM client object.
-        client = NM.Client.new(None)
-        primary_connection = client.get_primary_connection()
-        if not primary_connection:
-            self.inet_connection = '--'
-            self.metered_status = 0
-            return self.inet_connection, self.metered_status
-        self.inet_connection = primary_connection.get_id()
-
-        # Get metered status.
-        # https://developer.gnome.org/NetworkManager/unstable/nm-dbus-types.html#NMMetered
-        self.metered_status = client.props.metered
-
-        return self.inet_connection, self.metered_status
+    # def get_metered_status(self):
+    #     """
+    #     Returns the connection name and NetworkManager's metered status.
+    #     If there is no internet connection, then "disconnected" is returned.
+    #     statuses: 0 unknown, 1 yes, 2 no, 3 yes (guessed), 4 no (guessed)
+    #     """
+    #     # TODO: Verify this with other connections:
+    #     #   + offline
+    #     #   + wired
+    #     #   - ppp
+    #     #   - bluetooth?
+    #
+    #     # Get the default route.
+    #     #gws = netifaces.gateways()
+    #     # Get device.
+    #     #device = client.get_device_by_iface(gw4_device)
+    #
+    #     # Get connection name from NM client object.
+    #     client = NM.Client.new(None)
+    #     primary_connection = client.get_primary_connection()
+    #     if not primary_connection:
+    #         self.inet_connection = '--'
+    #         self.metered_status = 0
+    #         return self.inet_connection, self.metered_status
+    #     self.inet_connection = primary_connection.get_id()
+    #
+    #     # Get metered status.
+    #     # https://developer.gnome.org/NetworkManager/unstable/nm-dbus-types.html#NMMetered
+    #     self.metered_status = client.props.metered
+    #
+    #     return self.inet_connection, self.metered_status
 
     def get_refresh_config(self):
         """
@@ -163,23 +165,23 @@ class SettingsApp(Gtk.Application):
             print("error: unkown function")
             exit(1)
 
-    def set_metered_status(self, connection, state):
-        """
-        statuses: unknown, yes, no, yes (guessed), no (guessed)
-        (requires elevated privileges)
-        """
-        status = 'no'
-        if state == True:
-            status = 'yes'
-        # TODO: Figure out how to use NM API for this.
-        #   NOTE: NetworkManager seems to override snap-settings from "no" to
-        #       "guess yes" when on an Android hotspot connection.
-        subproc = subprocess.run(
-            ['nmcli', 'connection', 'modify', connection, 'connection.metered', status],
-            env={'LANG': 'C'},
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
+    # def set_metered_status(self, connection, state):
+    #     """
+    #     statuses: unknown, yes, no, yes (guessed), no (guessed)
+    #     (requires elevated privileges)
+    #     """
+    #     status = 'no'
+    #     if state == True:
+    #         status = 'yes'
+    #     # TODO: Figure out how to use NM API for this.
+    #     #   NOTE: NetworkManager seems to override snap-settings from "no" to
+    #     #       "guess yes" when on an Android hotspot connection.
+    #     subproc = subprocess.run(
+    #         ['nmcli', 'connection', 'modify', connection, 'connection.metered', status],
+    #         env={'LANG': 'C'},
+    #         stdout=subprocess.PIPE,
+    #         stderr=subprocess.STDOUT,
+    #     )
 
     def set_metered_handling(self, state):
         """
@@ -221,7 +223,7 @@ class Handler():
             item = app.builder.get_object('checkbox_metered')
             item.set_active(False)
             return
-        app.set_metered_status(app.connection, state)
+        net.set_metered_status(app.connection, state)
 
     def on_timer_apply_clicked(self, *args):
         input_obj = args[0]
