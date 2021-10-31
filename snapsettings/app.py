@@ -42,7 +42,7 @@ class SettingsApp(Gtk.Application):
         # Get initial values. (requires pkexec)
         self.metered_handling, self.revisions_kept = self.get_refresh_config() # pkexec
         # self.connection, self.metered_status = self.get_metered_status()
-        self.connection, self.metered_status = net.get_metered_status()
+        self.connection, self.metered_status = net.get_metered_status(self)
         self.refresh_timer, self.last_refresh, self.next_refresh = self.get_refresh_timer_info()
 
     def do_startup(self):

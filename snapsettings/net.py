@@ -1,3 +1,4 @@
+import subprocess
 # import gi
 
 # gi.require_version("NM", "1.0")
@@ -29,15 +30,16 @@ def get_nmcli_connection():
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT
         )
-        output = p.stdout.decode()
+        output = p.stdout.decode().splitlines()
         con = None
         gw = None
         for i, line in enumerate(output):
-            if line == 'IP4.GATEWAY':
+            if line[:12] == 'IP4.GATEWAY:':
                 g = line.split(':')[1]
+                print(g)
                 if g:
                     gw = g
-                    con = output[i-1]
+                    con = output[i-1].split(':')[1]
                     connections[ipv] = con
                     break
     # Default to IPv4 route.
@@ -98,7 +100,7 @@ def get_metered_status(app):
         'connection.metered',
         'connection',
         'show',
-        connection,
+        app.inet_connection,
     ]
     p = subprocess.run(cmd, env={'LANG': 'C'}, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     app.metered_status = p.stdout.decode().split()[1]
