@@ -19,7 +19,7 @@ def get_nmcli_connection():
     connections = {}
     for ipv in ipvs:
         cmd = [
-            'nmcli',
+            '$SNAP/usr/bin/nmcli',
             '--terse',
             f"--field=GENERAL.CONNECTION,{ipv}.GATEWAY",
             'device',

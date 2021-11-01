@@ -20,11 +20,11 @@ parts:
       - libhogweed4
       - libreadline7
       - libnettle6
-      - network-manager
+      # - network-manager
       - python3-gi
     stage-snaps:
       - http
-      # - network-manager
+      - network-manager
 
 apps:
   basic-snap-settings:
