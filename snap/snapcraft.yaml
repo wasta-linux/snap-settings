@@ -17,7 +17,6 @@ parts:
     build-packages:
       - python3-pip
     stage-packages:
-      - gettext
       - libhogweed4
       - libreadline7
       - libnettle6
