@@ -34,4 +34,4 @@ apps:
     extensions: [gnome-3-28]
     environment:
       # LIB: "lib/x86_64-linux-gnu"
-      LD_PRELOAD: ""
+      LD_PRELOAD: ":"
