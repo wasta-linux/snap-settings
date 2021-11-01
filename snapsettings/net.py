@@ -80,12 +80,6 @@ def get_metered_status(inet_connection):
     Returns the connection name and NetworkManager's metered status.
     statuses: 0 unknown, 1 yes, 2 no, 3 yes (guessed), 4 no (guessed)
     """
-    # TODO: Verify this with other connections:
-    #   + offline
-    #   + wired
-    #   - ppp
-    #   - bluetooth?
-
     # Get connection name from nmcli.
     # app.inet_connection = get_nmcli_connection()
     # if not app.inet_connection:

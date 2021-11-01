@@ -17,8 +17,13 @@ class App(unittest.TestCase):
         self.assertTrue(connection)
 
     def test_get_metered_status(self):
-        c = net.get_nmcli_connection()
-        metered_status = net.get_metered_status(c)
+        # TODO: Verify this with all connection types:
+        #   + offline
+        #   + wifi
+        #   - wired
+        #   - ppp
+        #   - bluetooth?
+        metered_status = net.get_metered_status(net.get_nmcli_connection())
         valid = [
             '0', '1', '2', '3', '4',
             'unknown', 'yes', 'no', 'yes (guessed)', 'no (guessed)'

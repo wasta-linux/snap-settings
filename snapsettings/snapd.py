@@ -3,6 +3,7 @@
 import json
 import subprocess
 
+from snapsettings import net
 from snapsettings import util
 
 
@@ -24,6 +25,9 @@ class Snap():
         return self.get('snaps').get('result')
 
     def get_refresh_list(self):
+        if net.get_nmcli_connection() == '--':
+            # Don't wait for self.get to timeout.
+            return ['--']
         result = self.get('find?select=refresh').get('result')
         refresh_list = None
         if isinstance(result, list):
