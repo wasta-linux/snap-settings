@@ -24,6 +24,9 @@ parts:
     stage-snaps:
       - http
       - network-manager
+    override-prime: |
+      snapcraftctl prime
+      chmod +x ${SNAPCRAFT_PRIME}/lib/x86_64-linux-gnu/bindtextdomain.so
 
 apps:
   basic-snap-settings:
