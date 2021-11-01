@@ -29,4 +29,6 @@ apps:
   basic-snap-settings:
     command: bin/basic-snap-settings
     extensions: [gnome-3-28]
-    plugs: [network-manager]
+    plugs:
+      - network-manager
+      - dbus
