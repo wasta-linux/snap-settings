@@ -20,7 +20,6 @@ parts:
       - libhogweed4
       - libreadline7
       - libnettle6
-      # - network-manager
       - python3-gi
     stage-snaps:
       - http
@@ -30,6 +29,3 @@ apps:
   basic-snap-settings:
     command: bin/basic-snap-settings
     extensions: [gnome-3-28]
-    environment:
-      # LIB: "lib/x86_64-linux-gnu"
-      LD_PRELOAD: ":"

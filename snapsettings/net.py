@@ -18,9 +18,14 @@ def get_nmcli_connection():
     primary_connection = '--'
     ipvs = ['IP4', 'IP6']
     connections = {}
+    # Add $SNAP/usr/bin to PATH.
+    temp_path = os.environ['PATH']
+    if os.environ['SNAP']:
+        temp_path = f"{os.environ['SNAP']}/usr/bin:{os.environ['PATH']}"
     for ipv in ipvs:
         cmd = [
-            f"{os.environ['SNAP']}/usr/bin/nmcli",
+            # f"{os.environ['SNAP']}/usr/bin/nmcli",
+            'nmcli',
             '--terse',
             f"--field=GENERAL.CONNECTION,{ipv}.GATEWAY",
             'device',
@@ -28,7 +33,10 @@ def get_nmcli_connection():
         ]
         p = subprocess.run(
             cmd,
-            env={'LANG': 'C'},
+            env={
+                'LANG': 'C',
+                'PATH': temp_path,
+            },
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT
         )
