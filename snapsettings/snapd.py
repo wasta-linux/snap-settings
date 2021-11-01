@@ -88,7 +88,7 @@ class Snap():
 
     def filter_ld_preload_error(self, output):
         filtered = []
-        for line in output.readlines():
+        for line in output.split('\n'):
             if line[:13] == 'ERROR: ld.so:':
                 continue
             else:
