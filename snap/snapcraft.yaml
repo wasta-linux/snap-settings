@@ -25,7 +25,7 @@ parts:
       - http
       - network-manager
     override-build:
-      snapcraft build
+      snapcraftctl build
       chmod +x $SNAPCRAFT_PRIME/lib/x86_64-linux-gnu/bindtextdomain.so
 
 apps:
