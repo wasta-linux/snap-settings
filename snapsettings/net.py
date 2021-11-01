@@ -1,3 +1,4 @@
+import os
 import subprocess
 # import gi
 
@@ -19,7 +20,7 @@ def get_nmcli_connection():
     connections = {}
     for ipv in ipvs:
         cmd = [
-            '$SNAP/usr/bin/nmcli',
+            f"{os.environ['SNAP']}/usr/bin/nmcli",
             '--terse',
             f"--field=GENERAL.CONNECTION,{ipv}.GATEWAY",
             'device',
