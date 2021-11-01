@@ -20,10 +20,11 @@ parts:
       - libhogweed4
       - libreadline7
       - libnettle6
+      - network-manager
       - python3-gi
     stage-snaps:
       - http
-      - network-manager
+      # - network-manager
     override-prime: |
       snapcraftctl prime
       chmod +x ${SNAPCRAFT_PRIME}/lib/x86_64-linux-gnu/bindtextdomain.so
