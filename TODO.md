@@ -1,3 +1,2 @@
 - [x] Convert to Gtk Application.
-- [ ] Use NM API instead of subprocess commands.
-- [ ] Consider using setup.py instead of debian/install
+- [ ] Set up logging and debug option to better understand what's not working in the snap.
