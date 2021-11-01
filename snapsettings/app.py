@@ -160,10 +160,13 @@ class SettingsApp(Gtk.Application):
         elif func == 'set_label':
             item.set_label(value)
         elif func == 'set_active':
-            if value == 0 or value == 2 or value == 4: # 'unknown', 'no', 'no (guessed)'
-                state = False
-            elif value == 1 or value == 3: # 'yes' or 'yes (guessed)'
-                state = True
+            # false = ['unknown', 'no', 'no (guessed)']
+            true = ['yes', 'yes (guessed)']
+            state = True if value in true else False
+            # if value == 0 or value == 2 or value == 4: # 'unknown', 'no', 'no (guessed)'
+                # state = False
+            # elif value == 1 or value == 3: # 'yes' or 'yes (guessed)'
+                # state = True
             item.set_active(state)
         else:
             print("error: unkown function")

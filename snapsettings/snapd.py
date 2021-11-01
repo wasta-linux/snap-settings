@@ -71,6 +71,7 @@ class Snap():
 
         cmd = ['/snap/bin/http', path]
         p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        print(p.stdout)
         output = json.loads(p.stdout.decode())
         return output
         # result = out.get('result')
