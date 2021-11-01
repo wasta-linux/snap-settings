@@ -1,0 +1,4 @@
+#!/bin/sh -e
+
+# This causes errors in subprocess output. Add +x to fix.
+chmod +x /lib/x86_64-linux-gnu/bindtextdomain.so
