@@ -74,8 +74,8 @@ class Snap():
         try:
             output = json.loads(p.stdout.decode())
         except json.JSONDecodeError:
-            print(f"STDOUT:\n{p.stdout}\n")
-            print(f"STDERR:\n{p.stderr}\n")
+            print(f"STDOUT:\n{p.stdout.decode()}\n")
+            print(f"STDERR:\n{p.stderr.decode()}\n")
             output = None
         return output
         # result = out.get('result')
