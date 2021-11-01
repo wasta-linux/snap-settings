@@ -71,8 +71,12 @@ class Snap():
 
         cmd = ['/snap/bin/http', path]
         p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        print(p.stdout)
-        output = json.loads(p.stdout.decode())
+        try:
+            output = json.loads(p.stdout.decode())
+        except json.JSONDecodeError:
+            print(f"STDOUT:\n{p.stdout}\n")
+            print(f"STDERR:\n{p.stderr}\n")
+            output = None
         return output
         # result = out.get('result')
         # if child and node != 'snaps':
