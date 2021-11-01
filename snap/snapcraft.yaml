@@ -32,3 +32,5 @@ apps:
   basic-snap-settings:
     command: bin/basic-snap-settings
     extensions: [gnome-3-28]
+    environment:
+      LIB: "${SNAP}/lib/x86_64-linux-gnu"
