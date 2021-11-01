@@ -26,7 +26,7 @@ parts:
       - network-manager
     override-build:
       snapcraft build
-      chmod +x $SNAPCRAFT_PART_BUILD/lib/x86_64-linux-gnu/bindtextdomain.so
+      chmod +x $SNAPCRAFT_PRIME/lib/x86_64-linux-gnu/bindtextdomain.so
 
 apps:
   basic-snap-settings:
