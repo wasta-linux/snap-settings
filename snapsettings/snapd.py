@@ -72,7 +72,7 @@ class Snap():
         cmd = ['/snap/bin/http', path]
         p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         try:
-            output = json.loads(p.stdout.decode())
+            output = json.loads(filter_ld_preload_error(p.stdout.decode()))
         except json.JSONDecodeError:
             for fd in [p.stdout, p.stderr]:
                 if fd is not None:
@@ -85,3 +85,12 @@ class Snap():
         #     for part in parts:
         #         result = result.get(part)
         # return result
+
+    def filter_ld_preload_error(output):
+        for line in output.readlines()
+        filtered = []
+        if line[:13] == 'ERROR: ld.so:':
+            continue
+        else:
+            filtered.append(line)
+        return '\n'.join(filtered)
