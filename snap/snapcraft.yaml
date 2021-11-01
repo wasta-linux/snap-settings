@@ -33,4 +33,5 @@ apps:
     command: bin/basic-snap-settings
     extensions: [gnome-3-28]
     environment:
-      LIB: "lib/x86_64-linux-gnu"
+      # LIB: "lib/x86_64-linux-gnu"
+      LD_PRELOAD: ""
