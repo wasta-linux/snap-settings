@@ -123,7 +123,7 @@ class SettingsApp(Gtk.Application):
         #     print(e)
         #     print("refresh.retain not set, defaulting to '2'")
         #     self.revisions_kept = 2
-        self.revisions_kept = int(refresh_settings.get('retain'), '2')
+        self.revisions_kept = int(refresh_settings.get('retain', '2'))
         print("refresh.retain defaults to 2 if unset")
 
         return self.metered_handling, self.revisions_kept
