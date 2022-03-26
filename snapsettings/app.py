@@ -202,9 +202,9 @@ class SettingsApp(Gtk.Application):
     def update_next_refresh_text(self):
         refresh_obj = self.builder.get_object('refresh_dates')
         next_refresh_text = self.get_refresh_timer_info()[2]
-        print(f'Next refresh time: {self.refresh_timer}')
+        print(f'Next refresh time: {self.next_refresh}')
         # refresh_obj.set_text(next_refresh_text)
-        refresh_obj.set_text(self.refresh_timer)
+        refresh_obj.set_text(self.next_refresh)
 
     def set_refresh_timer(self, value):
         """
