@@ -199,6 +199,11 @@ class SettingsApp(Gtk.Application):
         snap = snapd.Snap()
         snap.set_refresh_metered(state)
 
+    def update_next_refresh_text(self):
+        refresh_obj = self.builder.get_object('refresh_dates')
+        next_refresh_text = self.get_refresh_timer_info()[2]
+        refresh_obj.set_text(next_refresh_text)
+
     def set_refresh_timer(self, value):
         """
         default value:  00:00~24:00/4
@@ -245,6 +250,8 @@ class Handler():
             input = suggested_obj.get_text()
             input_obj.set_text(input)
         app.set_refresh_timer(input)
+        # Update next refresh time text.
+        app.update_next_refresh_text()
 
     def on_revs_kept_value_changed(self, *args):
         revs = int(args[0].get_value())
