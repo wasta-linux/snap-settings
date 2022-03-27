@@ -11,6 +11,7 @@ gi.require_version("NM", "1.0")
 from gi.repository import NM
 from pathlib import Path
 
+from snapsettings import handler
 from snapsettings import snapd
 
 
@@ -62,7 +63,8 @@ class SettingsApp(Gtk.Application):
             self.set_entity_value(id=id, func=func, value=value)
 
     def do_activate(self):
-        self.builder.connect_signals(Handler())
+        # self.builder.connect_signals(Handler())
+        self.builder.connect_signals(handler.Handler())
 
         window = self.builder.get_object("window_settings")
         self.add_window(window)
@@ -201,9 +203,8 @@ class SettingsApp(Gtk.Application):
 
     def update_next_refresh_text(self):
         refresh_obj = self.builder.get_object('refresh_dates')
-        next_refresh_text = self.get_refresh_timer_info()[2]
+        self.get_refresh_timer_info()
         print(f'Next refresh time: {self.next_refresh}')
-        # refresh_obj.set_text(next_refresh_text)
         refresh_obj.set_text(self.next_refresh)
 
     def set_refresh_timer(self, value):
