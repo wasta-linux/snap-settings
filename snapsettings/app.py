@@ -10,6 +10,7 @@ from gi.repository import Gtk
 gi.require_version("NM", "1.0")
 from gi.repository import NM
 from pathlib import Path
+from time import sleep
 
 from snapsettings import handler
 from snapsettings import snapd
@@ -63,7 +64,6 @@ class SettingsApp(Gtk.Application):
             self.set_entity_value(id=id, func=func, value=value)
 
     def do_activate(self):
-        # self.builder.connect_signals(Handler())
         self.builder.connect_signals(handler.Handler())
 
         window = self.builder.get_object("window_settings")
@@ -108,23 +108,9 @@ class SettingsApp(Gtk.Application):
         """
         with snapd.Snap() as snap:
             # Get refresh settings.
-            # refresh_settings = snap.get_refresh_settings()
             refresh_settings = snap.get('system', 'refresh')
 
-        #return self.metered_handling, self.revisions_kept
-        # try:
-        #     self.metered_handling = refresh_settings['metered']
-        # except KeyError:
-        #     # refresh.metered not set.
-        #     self.metered_handling = 'null'
         self.metered_handling = refresh_settings.get('metered', 'null')
-        # try:
-        #     self.revisions_kept = int(refresh_settings['retain'])
-        # except KeyError as e:
-        #     # refresh.retain not set.
-        #     print(e)
-        #     print("refresh.retain not set, defaulting to '2'")
-        #     self.revisions_kept = 2
         self.revisions_kept = int(refresh_settings.get('retain', '2'))
         print("refresh.retain defaults to 2 if unset")
 
@@ -198,8 +184,10 @@ class SettingsApp(Gtk.Application):
         states: 'null' or 'hold'
         (requires elevated privileges)
         """
-        snap = snapd.Snap()
-        snap.set_refresh_metered(state)
+        with snapd.Snap() as snap:
+            snap.set_refresh_metered(state)
+        # snap = snapd.Snap()
+        # snap.set_refresh_metered(state)
 
     def update_next_refresh_text(self):
         refresh_obj = self.builder.get_object('refresh_dates')
@@ -213,8 +201,14 @@ class SettingsApp(Gtk.Application):
         wasta value:    sun5,02:00
         (requires elevated privileges)
         """
-        snap = snapd.Snap()
-        snap.set_refresh_timer(value)
+        with snapd.Snap() as snap:
+            r = snap.set_refresh_timer(value)
+            change = r.json().get('change')
+            while not snap.changes(change).json().get('ready'):
+                print(f"change: {change}; status: {change_status}")
+                sleep(0.1)
+        # snap = snapd.Snap()
+        # snap.set_refresh_timer(value)
 
     def set_revisions_kept(self, revs):
         """
@@ -222,43 +216,10 @@ class SettingsApp(Gtk.Application):
         wasta revs:     2
         (requires elevated privileges)
         """
-        snap = snapd.Snap()
-        snap.set_refresh_retain(revs)
-
-class Handler():
-    def gtk_widget_destroy(self, *args):
-        app.quit()
-
-    def on_switch_metered_state_set(self, *args):
-        if args[1] == True:
-            state = 'null'
-        elif args[1] == False:
-            state = 'hold'
-        app.set_metered_handling(state)
-
-    def on_checkbox_metered_toggled(self, *args):
-        state = args[0].get_active()
-        if app.connection == '--':
-            item = app.builder.get_object('checkbox_metered')
-            item.set_active(False)
-            return
-        app.set_metered_status(app.connection, state)
-
-    def on_timer_apply_clicked(self, *args):
-        input_obj = args[0]
-        suggested_obj = app.builder.get_object('timer_suggested')
-        if input_obj.get_text():
-            input = input_obj.get_text()
-        else:
-            input = suggested_obj.get_text()
-            input_obj.set_text(input)
-        app.set_refresh_timer(input)
-        # Update next refresh time text.
-        app.update_next_refresh_text()
-
-    def on_revs_kept_value_changed(self, *args):
-        revs = int(args[0].get_value())
-        app.set_revisions_kept(revs)
+        with snapd.Snap() as snap:
+            snap.set_refresh_retain(revs)
+        # snap = snapd.Snap()
+        # snap.set_refresh_retain(revs)
 
 
 app = SettingsApp()
