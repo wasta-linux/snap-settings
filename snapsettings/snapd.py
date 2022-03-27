@@ -66,6 +66,11 @@ class Snap():
                 result = result.get(p)
         return result
 
+    def changes(self, id=None):
+        if id:
+            return self.get('changes', id)
+        return self.get('changes')
+
     def list(self):
         return self.get('snaps')
 
