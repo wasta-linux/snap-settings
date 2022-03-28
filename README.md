@@ -6,8 +6,6 @@ settings, such as:
 - the number of previous versions of snap packages to keep
 - whether or not to allow updates on a metered internet connection
 
-*See more info at https://wastalinux.org/wasta-apps/wasta-snap-manager*
-
 ### Feature wishlist:
 - Add in localization support.
 - Enable support for non-amd64 architectures.

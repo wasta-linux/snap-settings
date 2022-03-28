@@ -1,3 +1,10 @@
+snap-settings (0.3) focal; urgency=medium
+
+  * Enable next refresh time to update when config changed.
+  * Install properly using pybuild.
+
+ -- Nate Marti <nate_marti@sil.org>  Mon, 28 Mar 2022 13:00:53 +0100
+
 snap-settings (0.2.5) focal; urgency=medium
 
   * Fixed critical error when there is no previous refresh info.

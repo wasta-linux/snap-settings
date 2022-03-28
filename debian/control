@@ -12,7 +12,12 @@ Homepage: https://github.com/wasta-linux/snap-settings
 
 Package: snap-settings
 Architecture: all
-Depends: network-manager, snapd, python3, policykit-1, ${misc:Depends}
+Depends:
+ network-manager,
+ snapd,
+ python3,
+ policykit-1,
+ ${misc:Depends}
 Suggests:
 Description: Manage snap system settings for better control over updates.
  Snap Settings provides a graphical interface for managing various snap system
