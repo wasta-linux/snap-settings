@@ -19,15 +19,13 @@ app_name = bin_path.stem
 bin_dir = bin_path.parents[0]
 bin_parent_dir = bin_path.parents[1]
 
+runmode = 'installed'
 if bin_parent_dir.stem != 'usr':
     # If bin_dir's parent folder is not "/usr", then use uninstalled location.
-    modules_dir = str(bin_parent_dir)
     runmode = 'uninstalled'
-else:
-    modules_dir = '/usr/share/' + app_name
-    runmode = 'installed'
+    modules_dir = str(bin_parent_dir)
+    sys.path.append(modules_dir)
 
-sys.path.append(modules_dir)
 from snapsettings import app
 
 if __name__ == '__main__':
