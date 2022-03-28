@@ -9,6 +9,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 gi.require_version("NM", "1.0")
 from gi.repository import NM
+from gi.repository import GLib
 from pathlib import Path
 from time import sleep
 
@@ -36,6 +37,11 @@ class SettingsApp(Gtk.Application):
         self.metered_handling, self.revisions_kept = self.get_system_refresh_settings() # pkexec
         self.connection, self.metered_status = self.get_metered_status()
         self.refresh_timer, self.last_refresh, self.next_refresh = self.get_refresh_timer_info()
+
+        # Have next_refresh_label text update automatically.
+        self.next_refresh_label = self.builder.get_object('refresh_dates')
+        GLib.timeout_add(500, self.update_next_refresh_text)
+        self.update_next_refresh_text()
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
@@ -186,14 +192,11 @@ class SettingsApp(Gtk.Application):
         """
         with snapd.Snap() as snap:
             snap.set_refresh_metered(state)
-        # snap = snapd.Snap()
-        # snap.set_refresh_metered(state)
 
     def update_next_refresh_text(self):
-        refresh_obj = self.builder.get_object('refresh_dates')
         self.get_refresh_timer_info()
-        print(f'Next refresh time: {self.next_refresh}')
-        refresh_obj.set_text(self.next_refresh)
+        self.next_refresh_label.set_text(self.next_refresh)
+        return GLib.SOURCE_CONTINUE
 
     def set_refresh_timer(self, value):
         """
@@ -202,13 +205,7 @@ class SettingsApp(Gtk.Application):
         (requires elevated privileges)
         """
         with snapd.Snap() as snap:
-            r = snap.set_refresh_timer(value)
-            change = r.json().get('change')
-            while not snap.changes(change).json().get('ready'):
-                print(f"change: {change}; status: {change_status}")
-                sleep(0.1)
-        # snap = snapd.Snap()
-        # snap.set_refresh_timer(value)
+            snap.set_refresh_timer(value)
 
     def set_revisions_kept(self, revs):
         """
@@ -218,8 +215,6 @@ class SettingsApp(Gtk.Application):
         """
         with snapd.Snap() as snap:
             snap.set_refresh_retain(revs)
-        # snap = snapd.Snap()
-        # snap.set_refresh_retain(revs)
 
 
 app = SettingsApp()
