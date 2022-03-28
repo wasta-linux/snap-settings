@@ -1,3 +1,9 @@
+snap-settings (0.3.1) jammy; urgency=medium
+
+  * Handle situation where next refresh time is not defined.
+
+ -- Nate Marti <nate_marti@sil.org>  Mon, 28 Mar 2022 16:49:43 +0100
+
 snap-settings (0.3) focal; urgency=medium
 
   * Enable next refresh time to update when config changed.
