@@ -132,7 +132,10 @@ class SettingsApp(Gtk.Application):
             self.last_refresh = lines[1].split()[1]
         except IndexError:
             self.last_refresh = ''
-        self.next_refresh = lines[2].split(':',1)[1]
+        try:
+            self.next_refresh = lines[2].split(':',1)[1]
+        except IndexError:
+            self.next_refresh = ''
         return self.refresh_timer, self.last_refresh, self.next_refresh
 
     def set_entity_value(self, **kwargs):
