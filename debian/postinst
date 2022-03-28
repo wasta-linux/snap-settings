@@ -7,7 +7,7 @@ set -e
 
 case "$1" in
     configure)
-        rm -rf /usr/share/snap-settings # remove old package dir
+        rm -rf /usr/share/snap-settings/snapsettings/__pycache__ # remove old pycache dir
         ;;
     abort-upgrade|abort-remove|abort-deconfigure)
         ;;
