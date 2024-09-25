@@ -1,3 +1,9 @@
+snap-settings (0.3.3.1) noble; urgency=medium
+
+  * Set python version in package rather than in debian/changelog.
+
+ -- Nate Marti <nate_marti@sil.org>  Wed, 25 Sep 2024 18:48:08 +0100
+
 snap-settings (0.3.1) jammy; urgency=medium
 
   * Handle situation where next refresh time is not defined.
